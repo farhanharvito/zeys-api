@@ -49,7 +49,7 @@ async function getAllUsers(req, res) {
           user_id: singleUser.user_id,
         },
       });
-      res.status(200).json({ msg: `User with id : ${id} has beed deleted` });
+      res.status(200).json({ msg: `User with id : ${id} has been deleted` });
     } catch (error) {
       console.log(error.message);
     }
@@ -67,7 +67,7 @@ async function getAllUsers(req, res) {
       },
     });
   
-    if (response) return res.status(400).json({ msg: "Email is exist" });
+    if (response) return res.status(400).json({ msg: "Email already exist" });
   
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(password, saltRounds);
