@@ -74,9 +74,11 @@ async function getAllUsers(req, res) {
   
     try {
       const newUser = await User.create({
+
         email: email,
         password: hashedPassword,
       });
+      return res.json;
 
     } catch (error) {
       console.log(error.message);
