@@ -1,7 +1,11 @@
-const { Model } = require("sequelize");
+const { Model } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
-  class User extends Model {}
+  class User extends Model {
+    static associate(models) {
+      User.hasMany(models.Food, { foreignKey: 'user_id' });
+    }
+  }
 
   User.init(
     {
@@ -27,11 +31,6 @@ module.exports = (sequelize, DataTypes) => {
       sequelize,
     }
   );
-
-  // (async () => {
-  //   await sequelize.sync({ force: true });
-  //   console.log("All models were synchronized successfully.");
-  // })();
 
   return User;
 };

@@ -1,4 +1,4 @@
-const { User } = require("../../models");
+const { User, Food, Reminder } = require("../../models");
 const bcrypt = require("bcrypt");
 const config = require("../../config/config");
 const jwt = require("jsonwebtoken");
@@ -19,6 +19,12 @@ async function postLoginHandler(req, res) {
       where: {
         email: email,
       },
+      include: [
+        {
+          model: Food,
+          include: Reminder,
+        },
+      ],
     });
 
     const Match = await bcrypt.compare(password, response.password);
@@ -58,14 +64,15 @@ async function postLoginHandler(req, res) {
       error: false,
       msg: "Login success",
       loginResult: {
-        userId: response.user_id,
+        user_id: response.user_id,
         token: accessToken,
+        food: response.Food, // Include the associated food and reminder data
       },
     });
+    
   } catch (error) {
-    res
-      .status(400)
-      .json({ error: true, msg: `User with email : ${email} not found` });
+    console.log(error.message);
+    res.status(400).json({ error: true, msg: `User with email : ${email} not found` });
   }
 }
 

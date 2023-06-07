@@ -4,7 +4,7 @@
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable("Food", {
-      id: {
+      foodId: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
@@ -14,9 +14,19 @@ module.exports = {
         type: Sequelize.STRING,
         unique: true,
       },
-      expdate: {
+      expDate: {
         type: Sequelize.DATE,
         allowNull: false,
+      },
+      user_id: { // Add the foreign key column
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: "Users", // Name of the referenced table (Users table)
+          key: "user_id", // Primary key of the referenced table (user_id column)
+        },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
       },
       createdAt: {
         allowNull: false,

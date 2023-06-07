@@ -78,8 +78,8 @@ async function getAllUsers(req, res) {
         email: email,
         password: hashedPassword,
       });
-      return res.json;
 
+      return res.json(newUser);
     } catch (error) {
       console.log(error.message);
     }

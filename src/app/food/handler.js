@@ -1,18 +1,45 @@
-const { Food } = require("../../models");
+const { Food, Reminder } = require("../../models");
+//const { verifyToken } = require("../../middleware/verifyToken");
 
 async function getAllFoodHandler(req, res, next) {
   try {
-    const food = await Food.findAll();
+    const user_id = req.user.user_id; // Assuming the user ID is stored in the req.user object after token verification
+    const food = await Food.findAll({
+      include: Reminder,
+      where: {
+        user_id: user_id, // Add the condition to filter food items by user ID
+      },
+    });
     res.json(food);
   } catch (err) {
     next(err);
   }
 }
 
+async function getFoodById(req, res, next) {
+  const { id } = req.params;
+  try {
+    const user_id = req.user.user_id; // Assuming the user ID is stored in the req.user object after token verification
+    const food = await Food.findByPk(id, {
+      include: Reminder,
+      where: {
+        user_id: user_id, // Add the condition to filter food items by user ID
+      },
+    });
+    if (!food) {
+      return res.status(404).json({ msg: `Food with id: ${id} not found` });
+    }
+    res.json(food);
+  } catch (error) {
+    next(error);
+  }
+}
+
 async function createFood(req, res, next) {
   const { name, date } = req.body;
+  const user_id = req.user.user_id; // Assuming the user ID is stored in the req.user object after token verification
   try {
-    const food = await Food.create({ name, expdate: date });
+    const food = await Food.create({ name, expDate: date, user_id });
     res.status(201).json(food);
   } catch (error) {
     next(error);
@@ -21,18 +48,18 @@ async function createFood(req, res, next) {
 
 async function deleteFood(req, res, next) {
   const { id } = req.params;
+  const user_id = req.user.user_id; // Assuming the user ID is stored in the req.user object after token verification
   try {
     const food = await Food.destroy({
       where: {
         id,
+        user_id: user_id, // Add the condition to filter food items by user ID
       },
     });
     if (!food) {
-      return res
-        .status(404)
-        .json({ msg: `Food with id : ${id} not found` });
+      return res.status(404).json({ msg: `Food with id : ${id} not found` });
     }
-    res.status(200).json({ msg: `Food with id : ${id} has beed deleted` });
+    res.status(200).json({ msg: `Food with id : ${id} has been deleted` });
   } catch (error) {
     next(error);
   }
@@ -41,16 +68,18 @@ async function deleteFood(req, res, next) {
 async function updateFood(req, res, next) {
   const { id } = req.params;
   const { name, date } = req.body;
+  const user_id = req.user.user_id; // Assuming the user ID is stored in the req.user object after token verification
 
   try {
     await Food.update(
       {
         name: name,
-        expdate: date
+        expDate: date,
       },
       {
         where: {
           id,
+          user_id: user_id, // Add the condition to filter food items by user ID
         },
       }
     );
@@ -63,6 +92,7 @@ async function updateFood(req, res, next) {
 
 module.exports = {
   getAllFoodHandler,
+  getFoodById,
   createFood,
   deleteFood,
   updateFood,
