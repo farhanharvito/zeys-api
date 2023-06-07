@@ -19,12 +19,7 @@ async function postLoginHandler(req, res) {
       where: {
         email: email,
       },
-      include: [
-        {
-          model: Food,
-          include: Reminder,
-        },
-      ],
+    
     });
 
     const Match = await bcrypt.compare(password, response.password);
@@ -66,7 +61,7 @@ async function postLoginHandler(req, res) {
       loginResult: {
         user_id: response.user_id,
         token: accessToken,
-        food: response.Food, // Include the associated food and reminder data
+        // food: response.Food, // Include the associated food and reminder data
       },
     });
     
