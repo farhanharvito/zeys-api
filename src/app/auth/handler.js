@@ -22,17 +22,16 @@ async function postLoginHandler(req, res) {
       include: [
         {
           model: Food,
-          include: Reminder,
         },
       ],
     });
 
-    if (!response.Food) {
-      return res.status(404).json({
-        error: true,
-        msg: "No food items found for the user",
-      });
-    }
+    // if (!response.Food || response.Food.length === 0) {
+    //   return res.status(404).json({
+    //     error: true,
+    //     msg: "No food items found for the user",
+    //   });
+    // }
 
     const Match = await bcrypt.compare(password, response.password);
     if (!Match)

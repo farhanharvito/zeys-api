@@ -3,8 +3,7 @@ const { Model } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class Food extends Model {
     static associate(models) {
-      Food.belongsTo(models.User, { foreignKey: 'user_id' });
-      Food.hasMany(models.Reminder, { foreignKey: 'foodId' });
+      Food.belongsTo(models.User, { foreignKey: 'idUser', targetKey: 'user_id' });
     }
   }
 
@@ -18,13 +17,13 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.DATE,
         allowNull: false,
       },
-      user_id: {
+      idUser: {
         type: DataTypes.INTEGER,
       }
     },
     {
       sequelize,
-      modelName: 'Food',
+      tableName: 'foods',
     }
   );
 

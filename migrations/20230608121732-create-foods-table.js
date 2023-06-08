@@ -3,7 +3,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("Foods", {
+    await queryInterface.createTable("foods", {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -18,11 +18,11 @@ module.exports = {
         type: Sequelize.DATE,
         allowNull: false,
       },
-      userId: { // Add the foreign key column
+      idUser: { // Add the foreign key column
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: "Users", // Name of the referenced table (Users table)
+          model: "users", // Name of the referenced table (Users table)
           key: "user_id", // Primary key of the referenced table (user_id column)
         },
         onUpdate: "CASCADE",
@@ -39,6 +39,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("Foods_Table");
+    await queryInterface.dropTable("foods");
   },
 };

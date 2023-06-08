@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const config = require("../config/config");
-
+const test = "51cy1vu1v18312";
 module.exports = {
   verifyToken: (req, res, next) => {
     const { accessTokenSecret: accessSecret } = config.jwt;

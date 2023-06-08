@@ -2,11 +2,10 @@ const { Food, Reminder } = require("../../models");
 
 async function getAllFoodHandler(req, res, next) {
   try {
-    const userId = req.user.user_id; // Assuming the user ID is stored in the req.user object after token verification
+    const user_id = req.user.user_id; // Assuming the user ID is stored in the req.user object after token verification
     const food = await Food.findAll({
-      include: Reminder,
       where: {
-        user_id: userId, // Add the condition to filter food items by user ID
+      idUser: user_id, // Add the condition to filter food items by user ID
       },
     });
     res.json(food);
@@ -18,11 +17,11 @@ async function getAllFoodHandler(req, res, next) {
 async function getFoodById(req, res, next) {
   const { id } = req.params;
   try {
-    const userId = req.user.user_id; // Assuming the user ID is stored in the req.user object after token verification
+    const user_id = req.user.user_id; // Assuming the user ID is stored in the req.user object after token verification
     const food = await Food.findByPk(id, {
       include: Reminder,
       where: {
-        user_id: userId, // Add the condition to filter food items by user ID
+        idUser: user_id, // Add the condition to filter food items by user ID
       },
     });
     if (!food) {
@@ -35,10 +34,10 @@ async function getFoodById(req, res, next) {
 }
 
 async function createFoodManual(req, res, next) {
-  const { name, date } = req.body;
-  const userId = req.user.user_id; // Assuming the user ID is stored in the req.user object after token verification
+  const { name, expDate } = req.body;
+  const user_id = req.user.user_id; // Assuming the user ID is stored in the req.user object after token verification
   try {
-    const food = await Food.create({ name, expDate: date, user_id: userId });
+    const food = await Food.create({ name, expDate: expDate, idUser: user_id });
     res.status(201).json(food);
   } catch (error) {
     next(error);
@@ -46,9 +45,9 @@ async function createFoodManual(req, res, next) {
 }
 
 async function createFoodML(req, res, next) {
-    const { name, date } = req.body;
+    const { name, expDate } = req.body;
     try {
-      const food = await Food.create({ name, expDate: date });
+      const food = await Food.create({ name, expDate: expDate });
       res.status(201).json(food);
     } catch (error) {
       next(error);
@@ -57,12 +56,12 @@ async function createFoodML(req, res, next) {
 
 async function deleteFood(req, res, next) {
   const { id } = req.params;
-  const userId = req.user.user_id; // Assuming the user ID is stored in the req.user object after token verification
+  const user_id = req.user.user_id; // Assuming the user ID is stored in the req.user object after token verification
   try {
     const food = await Food.destroy({
       where: {
         id,
-        user_id: userId, // Add the condition to filter food items by user ID
+        idUser: user_id, // Add the condition to filter food items by user ID
       },
     });
     if (!food) {
@@ -77,7 +76,7 @@ async function deleteFood(req, res, next) {
 async function updateFood(req, res, next) {
   const { id } = req.params;
   const { name, date } = req.body;
-  const userId = req.user.user_id; // Assuming the user ID is stored in the req.user object after token verification
+  const user_id = req.user.user_id; // Assuming the user ID is stored in the req.user object after token verification
 
   try {
     await Food.update(
@@ -88,7 +87,7 @@ async function updateFood(req, res, next) {
       {
         where: {
           id,
-          user_id: userId, // Add the condition to filter food items by user ID
+          idUser: user_id, // Add the condition to filter food items by user ID
         },
       }
     );
