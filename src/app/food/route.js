@@ -1,19 +1,13 @@
 const express = require("express");
+const handler = require("./handler");
 const router = express.Router();
 const { verifyToken } = require("../../middleware/verifyToken");
-const {
-  getAllFoodHandler,
-  getFoodById,
-  createFood,
-  deleteFood,
-  updateFood,
-} = require("./handler");
 
-// Apply the verifyToken middleware to the routes that require authentication
-router.get("/", verifyToken, getAllFoodHandler);
-router.get("/:id", verifyToken, getFoodById);
-router.post("/", verifyToken, createFood);
-router.delete("/:id", verifyToken, deleteFood);
-router.put("/:id", verifyToken, updateFood);
+router.get("/",verifyToken, handler.getAllFoodHandler);
+router.get("/:id",verifyToken, handler.getFoodById);
+router.post("/create",verifyToken, handler.createFoodManual);
+router.post("/createml", handler.createFoodML);
+router.delete("/delete/:id",verifyToken, handler.deleteFood);
+router.put("/update/:id",verifyToken, handler.updateFood);
 
 module.exports = router;

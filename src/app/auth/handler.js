@@ -19,8 +19,20 @@ async function postLoginHandler(req, res) {
       where: {
         email: email,
       },
-    
+      include: [
+        {
+          model: Food,
+          include: Reminder,
+        },
+      ],
     });
+
+    if (!response.Food) {
+      return res.status(404).json({
+        error: true,
+        msg: "No food items found for the user",
+      });
+    }
 
     const Match = await bcrypt.compare(password, response.password);
     if (!Match)
@@ -61,7 +73,7 @@ async function postLoginHandler(req, res) {
       loginResult: {
         user_id: response.user_id,
         token: accessToken,
-        // food: response.Food, // Include the associated food and reminder data
+        food: response.Food,
       },
     });
     
