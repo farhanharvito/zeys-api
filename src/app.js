@@ -17,6 +17,9 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
+app.get("/", (req, res)=>{
+    res.status(200).send("Server is currently running");
+});
 app.use("/users", userRouter);
 app.use("/auth", authRouter);
 app.use("/food", foodRouter);
