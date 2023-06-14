@@ -24,7 +24,23 @@ const getAllHistory = async (req, res) => {
   }
 };
 
+const getAllHistoryByUser = async (req, res) => {
+    try {
+      const user_id = req.params.user_id; // Assuming the user ID is passed as a route parameter
+      const history = await History.findAll({
+        where: {
+          idUser: user_id,
+        },
+      });
+      res.json({ history });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Failed to retrieve history entries' });
+    }
+  };
+
 module.exports = {
   createHistory,
   getAllHistory,
+  getAllHistoryByUser,
 };
