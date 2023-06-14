@@ -15,16 +15,16 @@ async function getAllFoodHandler(req, res, next) {
 }
 
 async function getFoodById(req, res, next) {
-  const { id } = req.params;
+  const { food_id } = req.params;
   try {
     const user_id = req.user.user_id; 
-    const food = await Food.findByPk(id, {
+    const food = await Food.findByPk(food_id, {
       where: {
         idUser: user_id, 
       },
     });
     if (!food) {
-      return res.status(404).json({ msg: `Food with id: ${id} not found` });
+      return res.status(404).json({ msg: `Food with id: ${food_id} not found` });
     }
     res.json(food);
   } catch (error) {
@@ -54,26 +54,26 @@ async function createFoodML(req, res, next) {
   }
 
 async function deleteFood(req, res, next) {
-  const { id } = req.params;
+  const { food_id } = req.params;
   const user_id = req.user.user_id; 
   try {
     const food = await Food.destroy({
       where: {
-        id,
+        food_id,
         idUser: user_id, 
       },
     });
     if (!food) {
-      return res.status(404).json({ msg: `Food with id : ${id} not found` });
+      return res.status(404).json({ msg: `Food with id : ${food_id} not found` });
     }
-    res.status(200).json({ msg: `Food with id : ${id} has been deleted` });
+    res.status(200).json({ msg: `Food with id : ${food_id} has been deleted` });
   } catch (error) {
     next(error);
   }
 }
 
 async function updateFood(req, res, next) {
-  const { id } = req.params;
+  const { food_id } = req.params;
   const { name, date } = req.body;
   const user_id = req.user.user_id; 
 
@@ -85,13 +85,13 @@ async function updateFood(req, res, next) {
       },
       {
         where: {
-          id,
+          food_id,
           idUser: user_id, 
         },
       }
     );
 
-    return res.status(200).json({ msg: `Food with id : ${id} updated` });
+    return res.status(200).json({ msg: `Food with id : ${food_id} updated` });
   } catch (error) {
     next(error);
   }
