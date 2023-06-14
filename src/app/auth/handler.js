@@ -42,6 +42,7 @@ async function postLoginHandler(req, res) {
     const payloadUser = {
       user_id: response.user_id,
       email: response.email,
+      username: response.username,
     };
 
     const accessToken = jwt.sign(payloadUser, accessSecret, {
@@ -71,6 +72,7 @@ async function postLoginHandler(req, res) {
       msg: "Login success",
       loginResult: {
         user_id: response.user_id,
+        username: response.username,
         token: accessToken,
         food: response.Food,
       },

@@ -58,7 +58,7 @@ async function getAllUsers(req, res) {
   
   // user signup
   async function Register(req, res) {
-    const {email, password} =
+    const {username, email, password} =
       req.body;
   
     const response = await User.findOne({
@@ -74,7 +74,7 @@ async function getAllUsers(req, res) {
   
     try {
       const newUser = await User.create({
-
+        username: username,
         email: email,
         password: hashedPassword,
       });

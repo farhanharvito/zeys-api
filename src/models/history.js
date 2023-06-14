@@ -1,37 +1,36 @@
 const { Model } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
-  class Food extends Model {
+  class History extends Model {
     static associate(models) {
-      Food.belongsTo(models.User, { foreignKey: 'idUser', targetKey: 'user_id' });
-      Food.hasMany(models.History, { foreignKey: 'idFood', sourceKey: 'food_id' });
+      History.belongsTo(models.User, { foreignKey: 'idUser', targetKey: 'user_id' });
+      History.belongsTo(models.Food, { foreignKey: 'idFood', targetKey: 'food_id' });
     }
   }
 
-  Food.init(
+  History.init(
     {
-      food_id: {
+      history_id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true,
       },
-      name: {
-        type: DataTypes.STRING,
-        allowNull: false,
+      idFood: {
+        type: DataTypes.INTEGER,
       },
-      expDate: {
+      consumedDate: {
         type: DataTypes.DATE,
         allowNull: false,
       },
       idUser: {
         type: DataTypes.INTEGER,
-      }
+      },
     },
     {
       sequelize,
-      tableName: 'foods',
+      tableName: 'history',
     }
   );
 
-  return Food;
+  return History;
 };

@@ -5,10 +5,10 @@ async function getAllFoodHandler(req, res, next) {
     const user_id = req.user.user_id; 
     const food = await Food.findAll({
       where: {
-      idUser: user_id, 
+      idUser: user_id,
       },
     });
-    res.json(food);
+    res.json({food});
   } catch (err) {
     next(err);
   }
@@ -19,7 +19,6 @@ async function getFoodById(req, res, next) {
   try {
     const user_id = req.user.user_id; 
     const food = await Food.findByPk(id, {
-      include: Reminder,
       where: {
         idUser: user_id, 
       },
