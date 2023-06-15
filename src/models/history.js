@@ -1,4 +1,5 @@
 const { Model } = require('sequelize');
+const dataTypes = require('sequelize/lib/data-types');
 
 module.exports = (sequelize, DataTypes) => {
   class History extends Model {
@@ -17,6 +18,10 @@ module.exports = (sequelize, DataTypes) => {
       },
       idFood: {
         type: DataTypes.INTEGER,
+      },
+      foodName:{
+        type: DataTypes.STRING,
+        allowNull: false,
       },
       consumedDate: {
         type: DataTypes.DATE,

@@ -3,10 +3,10 @@ const { History, Food, User } = require('../../models');
 // Create a new history entry
 const createHistory = async (req, res) => {
   try {
-    const { idFood, consumedDate, idUser } = req.body;
-    const history = await History.create({ idFood, consumedDate, idUser });
+    const { idFood, foodName, consumedDate, idUser } = req.body;
+    const history = await History.create({ idFood, foodName, consumedDate, idUser });
     res.status(201).json({ history });
-    await Food.destroy({ where: { id: idFood, idUser } });
+    await Food.destroy({ where: { food_id: idFood, idUser } });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Failed to create history entry' });
@@ -22,10 +22,6 @@ const getAllHistory = async (req, res) => {
       where: {
         idUser: user_id,
       },
-      include: [
-        { model: User, as: 'User', attributes: ['username'] },
-        { model: Food, as: 'Food', attributes: ['name'] }
-      ],
     });
     res.json({ history });
   } catch (error) {

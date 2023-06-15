@@ -11,12 +11,9 @@ module.exports = {
       idFood: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        references: {
-          model: 'foods',
-          key: 'food_id',
-        },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE',
+      },
+      foodName:{
+        type: Sequelize.STRING,
       },
       consumedDate: {
         type: Sequelize.DATE,
