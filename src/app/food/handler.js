@@ -1,4 +1,4 @@
-const { Food, Reminder } = require("../../models");
+const { Food } = require("../../models");
 
 async function getAllFoodHandler(req, res, next) {
   try {
