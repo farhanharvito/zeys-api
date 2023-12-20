@@ -1,18 +1,16 @@
 const express = require("express");
 const {
   getAllUsers,
-  getSingleUser,
-  Register,
+  createUser,
+  loginHandler,
   deleteUser,
 } = require("./handler");
 
-const { verifyToken } = require("../../middleware/verifyToken");
-
 const router = express.Router();
 
-router.get("/", verifyToken, getAllUsers);
-router.get("/:id", getSingleUser);
-router.post("/register", Register);
+router.get("/", getAllUsers);
+router.post("/register", createUser);
 router.delete("/:id", deleteUser);
+router.post("/login", loginHandler);
 
 module.exports = router;

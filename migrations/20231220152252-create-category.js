@@ -1,32 +1,23 @@
 "use strict";
-
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("foods", {
-      food_id: {
+    await queryInterface.createTable("Categories", {
+      id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
       name: {
+        allowNull: false,
         type: Sequelize.STRING,
-        allowNull: false,
+        unique: true,
       },
-      expDate: {
-        type: Sequelize.DATE,
-        allowNull: false,
-      },
-      idUser: { // Add the foreign key column
+      total_product: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        references: {
-          model: "users", // Name of the referenced table (Users table)
-          key: "user_id", // Primary key of the referenced table (user_id column)
-        },
-        onUpdate: "CASCADE",
-        onDelete: "CASCADE",
+        defaultValue: 0,
       },
       createdAt: {
         allowNull: false,
@@ -39,6 +30,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("foods");
+    await queryInterface.dropTable("Categories");
   },
 };

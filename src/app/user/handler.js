@@ -1,93 +1,84 @@
 const { User } = require("../../models");
 const bcrypt = require("bcrypt");
 
-// Get all users
-async function getAllUsers(req, res) {
-    try {
-      const users = await User.findAll({
-        attributes: ["user_id", "email"],
-      });
-      if (!users) return res.status(404).json({ msg: "Users is empty" });
-      res.status(200).json(users);
-    } catch (error) {
-      console.log(error.message);
-    }
+const handleServerError = (res, error) => {
+  console.error(error);
+  res.status(500).json({ error: "Internal Server Error" });
+};
+
+const getAllUsers = async (req, res) => {
+  try {
+    const users = await User.findAll();
+    res.json(users);
+  } catch (error) {
+    handleServerError(res, error);
   }
-  
-  // Get specific user by id
-  async function getSingleUser(req, res) {
-    const { id } = req.params;
-    try {
-      const users = await User.findOne({
-        attributes: ["user_id", "email"],
-        where: {
-          user_id: id,
-        },
-      });
-      if (!users)
-        return res.status(404).json({ msg: `User with id : ${id} not found` });
-      res.status(200).json(users);
-    } catch (error) {
-      console.log(error.message);
+};
+
+const createUser = async (req, res) => {
+  const { name, email, password, phone, username } = req.body;
+
+  try {
+    const existingUser = await User.findOne({ where: { email } });
+    if (existingUser) {
+      return res.status(400).json({ error: "Email already exists" });
     }
-  }
-  
-  // delete user by id
-  async function deleteUser(req, res) {
-    const { id } = req.params;
-    const singleUser = await User.findOne({
-      where: {
-        user_id: id,
-      },
+
+    const newUser = await User.create({
+      name,
+      email,
+      password: await bcrypt.hash(password, 10),
+      phone,
+      username,
     });
-    if (!singleUser)
-      return res.status(404).json({ msg: `User with id : ${id} not found` });
-  
-    try {
-      await User.destroy({
-        where: {
-          user_id: singleUser.user_id,
-        },
-      });
-      res.status(200).json({ msg: `User with id : ${id} has been deleted` });
-    } catch (error) {
-      console.log(error.message);
-    }
+    res.status(201).json(newUser);
+  } catch (error) {
+    handleServerError(res, error);
   }
+};
+const findUserById = async (userId) => {
+  const user = await User.findByPk(userId);
+  return user;
+};
 
-  
-  // user signup
-  async function Register(req, res) {
-    const {username, email, password} =
-      req.body;
-  
-    const response = await User.findOne({
-      where: {
-        email: email,
-      },
-    });
-  
-    if (response) return res.status(400).json({ msg: "Email already exist" });
-  
-    const saltRounds = 10;
-    const hashedPassword = await bcrypt.hash(password, saltRounds);
-  
-    try {
-      const newUser = await User.create({
-        username: username,
-        email: email,
-        password: hashedPassword,
-      });
-
-      return res.json(newUser);
-    } catch (error) {
-      console.log(error.message);
+const deleteUser = async (req, res) => {
+  try {
+    const user = await findUserById(req.params.id);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
     }
-  }
 
-  module.exports = {
-    getAllUsers,
-    getSingleUser,
-    Register,
-    deleteUser,
-  };
+    await user.destroy();
+    res.json({ message: "User deleted successfully" });
+  } catch (error) {
+    handleServerError(res, error);
+  }
+};
+
+const loginHandler = async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    const user = await User.findOne({ where: { email } });
+    if (!user) {
+      return res.status(401).json({ error: "Invalid credentials" });
+    }
+
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+
+    if (!isPasswordValid) {
+      return res.status(401).json({ error: "Invalid password" });
+    }
+
+    res.json({ message: "Login successful", user });
+  } catch (error) {
+    handleServerError(res, error);
+  }
+};
+
+module.exports = {
+  getAllUsers,
+  createUser,
+  deleteUser,
+  loginHandler,
+};

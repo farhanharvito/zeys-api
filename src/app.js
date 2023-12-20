@@ -5,9 +5,9 @@ const logger = require("morgan");
 const cors = require("cors");
 
 const userRouter = require("./app/user/route");
-const authRouter = require("./app/auth/route");
-const foodRouter = require("./app/food/route");
-const historyRouter = require("./app/history/route");
+const categoryRouter = require("./app/category/route");
+const productRouter = require("./app/product/route");
+const campaignRouter = require("./app/campaign/route");
 const app = express();
 
 app.use(logger("dev"));
@@ -17,13 +17,13 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
-app.get("/", (req, res)=>{
-    res.status(200).send("Server is currently running");
+app.get("/", (req, res) => {
+  res.status(200).send("Server is currently running");
 });
 
-app.use("/users", userRouter);
-app.use("/auth", authRouter);
-app.use("/food", foodRouter);
-app.use("/history", historyRouter);
+app.use("/user", userRouter);
+app.use("/category", categoryRouter);
+app.use("/product", productRouter);
+app.use("/campaign", campaignRouter);
 
 module.exports = app;
