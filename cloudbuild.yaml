@@ -1,20 +1,20 @@
- steps:
- # Build the container image
- - name: 'gcr.io/cloud-builders/docker'
-   args: ['build', '-t', 'gcr.io/$PROJECT_ID/kulkaskita-backend-build:$COMMIT_SHA', '.']
- # Push the container image to Container Registry
- - name: 'gcr.io/cloud-builders/docker'
-   args: ['push', 'gcr.io/$PROJECT_ID/kulkaskita-backend-build:$COMMIT_SHA']
- # Deploy container image to Cloud Run
- - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-   entrypoint: gcloud
-   args:
-   - 'run'
-   - 'deploy'
-   - 'kulkaskita-backend-build'
-   - '--image'
-   - 'gcr.io/$PROJECT_ID/kulkaskita-backend-build:$COMMIT_SHA'
-   - '--region'
-   - 'asia-southeast2'
- images:
- - 'gcr.io/$PROJECT_ID/kulkaskita-backend-build:$COMMIT_SHA'
+steps:
+  # Build the container image
+  - name: "gcr.io/cloud-builders/docker"
+    args: ["build", "-t", "gcr.io/$PROJECT_ID/zeys-cicd:$COMMIT_SHA", "."]
+  # Push the container image to Container Registry
+  - name: "gcr.io/cloud-builders/docker"
+    args: ["push", "gcr.io/$PROJECT_ID/zeys-cicd:$COMMIT_SHA"]
+  # Deploy container image to Cloud Run
+  - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
+    entrypoint: gcloud
+    args:
+      - "run"
+      - "deploy"
+      - "zeys-cicd"
+      - "--image"
+      - "gcr.io/$PROJECT_ID/zeys-cicd:$COMMIT_SHA"
+      - "--region"
+      - "asia-southeast2"
+images:
+  - "gcr.io/$PROJECT_ID/zeys-cicd:$COMMIT_SHA"
